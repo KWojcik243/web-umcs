@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OX</title>
+        <script>
+            function gen() {
+            const main = document.getElementById("main")
+            let turn = 0
+            for (let i=0; i < 9; i++) {
+                const key0 = document.createElement("button")
+                key0.id = `button${i}`;
+                key0.innerText = "\n"
+                key0.style.width = "40px"
+                key0.style.height = "40px"
+                key0.onclick = function() {
+                    if (key0.innerText == "\n" && document.getElementById("win") == null){
+                        if(turn % 2 === 0) {
+                            key0.innerText = "O"
+                            turn += 1
+                        } else {
+                            key0.innerText = "X"
+                            turn += 1
+                        }
+                    }
+                    checkWin(turn)
+                }
+                key0.dataset.value = ""
+                main.appendChild(key0)
+                
+                if (i % 3 === 2) {
+                    main.appendChild(document.createElement("div"));
+                } 
+            }
+            const clear = document.createElement("button")
+            clear.innerText = "CLEAR"
+            clear.style.width = "120px"
+            clear.onclick = function() {
+                clear_fun()
+                turn = 0
+            }
+            main.appendChild(clear)
+        }
+
+        function clear_fun() {
+            for (let i=0; i < 9; i++) {
+                const button = document.getElementById(`button${i}`)
+                button.innerText = "\n"
+            }
+            const win = document.getElementById("win")
+            if(win != null){
+                win.remove()
+            }
+        }
+        function checkWin(turn) {
+            const winningCombination = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Poziome
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Pionowe
+                [0, 4, 8], [2, 4, 6]             // Przekątne
+            ];
+        
+            for (const combo of winningCombination) {
+                const [a, b, c] = combo;
+                const buttonA = document.getElementById(`button${a}`);
+                const buttonB = document.getElementById(`button${b}`);
+                const buttonC = document.getElementById(`button${c}`);
+        
+                if (buttonA.innerText !== "\n" && buttonA.innerText === buttonB.innerText && buttonA.innerText === buttonC.innerText && document.getElementById("win") == null) {
+                    const div = document.createElement("div")
+                    div.innerText = `Wygrał ${buttonA.innerText}`
+                    div.id = "win"
+                    main.appendChild(div)
+                    return null;
+                }
+            }
+            if (turn == 9 && document.getElementById("win") == null){
+                    const div = document.createElement("div")
+                    div.innerText = `Remis`
+                    div.id = "win"
+                    main.appendChild(div)
+                    return null;
+                }
+        
+            return null;
+        }
+        </script>
+    </head>
+    <body onload="gen()">
+        <div id="main">
+        </div>
+    </body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <script>
+    function gen() {
+        const main = document.getElementById("main")
+        const history = document.createElement("textarea");
+        main.appendChild(history)
+        main.appendChild(document.createElement("div"));
+        const input_text = document.createElement("input");
+        main.appendChild(input_text)
+        const dele = document.createElement("button")
+        dele.innerText = "<="
+        dele.onclick = function() {
+            input_text.value = input_text.value.slice(0, -1)
+        };
+        dele.dataset.value = "<="
+        main.appendChild(dele)
+        main.appendChild(document.createElement("div"));
+
+        const keys = "123*456-789+0./C=";
+        
+        for (let i=0; i < keys.length; i++) {
+            const key0 = document.createElement("button")
+            key0.innerText = keys[i]
+            if(keys[i] === "C") {
+                key0.onclick = function() {
+                    input_text.value = ""
+                };
+            } else if (keys[i] === "=") {
+                    key0.onclick = function() {
+                        try {
+                            result = eval(input_text.value)
+                            history.value += input_text.value + " = " + result + "\n";
+                            input_text.value = result
+                        }
+                        catch (err){
+                            input_text.value = "error"
+                        }
+                    };
+                }
+            else {
+                key0.onclick = function() {
+                    edit(keys[i], input_text)
+                };
+            }
+            key0.dataset.value = keys[i]
+            main.appendChild(key0)
+            if (i % 4 === 3) {
+                main.appendChild(document.createElement("div"));
+            }
+                
+        }
+    }
+
+    function edit(i, text){
+        text.value += i
+    }
+    
+    </script>
+    </head>
+    <body onload="gen()">
+        <div id="main">
+        </div>
+    </body>
+</html>
